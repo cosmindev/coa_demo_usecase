@@ -1,10 +1,157 @@
 # Best Practices
 
-## What is a Quick Start?
-A Quick Start allows a customer to deploy some ISV's software product (e.g. Couchbase, Cloudera, Datastax).  It deploys an appropriate architecture and installs the software in their tenancy.  A Quick Start has defaults that deploy a simple example of the software.  It requires as few parameters as possible and does not depend on any existing resources. It is parameterized in such a way that the same Quickstart can be used for more complicated deployments.
+## Teraform frequently used tools, commands, data structures and instructions
+
+* terraform dependency graph generation: ```terraform graph | dot -Tsvg > graph.svg ```
+
+![Dependency Graph](./Diagrams/graph.svg)
+
+* terraform console for testing terraform functions outside main project: ``` terraform console ```
+
+```
+> matchkeys(["80", "443"], ["80", "443"], ["443"]) 
+tolist([
+  "443",
+])
+> matchkeys(["80"], ["80"], ["443"]) 
+tolist([])
+```
+
+* Project level default compartment VS service dedicated containter
+
+*.auto.tfvars
+```
+...
+# default compartment 
+default_compartment_id = "ocid1.compartment.oc1..aaaaaaa..."
+...
+#############################
+# OCI COA network
+#############################
+
+# The specific network compartment id. If this is null then the default, project level compartment_id will be used.
+network_compartment_id = null
+...
+#############################
+# OCI COA WEB Instances
+#############################
+
+# The specific compute compartment id. If this is null then the default, project level compartment_id will be used.
+compute_compartment_id = null
+```
+
+network.tf
+
+```
+...
+resource "oci_core_vcn" "coa_demo_vcn" {
+  #Required
+  compartment_id = var.network_compartment_id != null ? var.network_compartment_id : var.default_compartment_id
+...
+```
+
+compute.tf
+
+```
+...
+resource "oci_core_instance" "web_instance" {
+  count = var.cluster_size
+
+  #Required
+  compartment_id      = var.compute_compartment_id != null ? var.compute_compartment_id : var.default_compartment_id
+...
+```
+* Parametrize optional configuration
+
+Example: Open certain ports
+
+vars.tf
+
+```
+...
+# LBaaS listening ports
+# Accepted values: ["80", "443", "<port number>"] 
+variable "lbaas_listening_ports" {
+  type        = list(string)
+  default     = ["443"]
+  description = "Accepted values: [80, 443, port number]"
+}
+...
+```
+
+coa_demo.auto.tfvars
+
+```
+...
+# LBaaS listening ports
+# Accepted values: ["80", "443", "<port number>"] 
+lbaas_listening_ports = ["80", "443"]
+...
+```
+
+networking.tf
+
+```
+...
+resource "oci_core_security_list" "coa_public_subnet_security_list" {
+...
+  dynamic "ingress_security_rules" {
+    for_each = var.lbaas_listening_ports
+    content {
+      #Required
+      protocol = local.tcp_protocol
+      source   = local.anywhere
+      #Optional
+      description = "Allow ingress for HTTPS:${ingress_security_rules.value} from anywhere"
+      source_type = "CIDR_BLOCK"
+      stateless   = false
+      tcp_options {
+        max = ingress_security_rules.value
+        min = ingress_security_rules.value
+        #Optional
+        #source_port_range = 
+      }
+    }
+  }
+...
+}
+```
+lbaas.tf
+
+```
+...
+resource "oci_load_balancer_listener" "coa_listeners" {
+  for_each = local.ports_set
+
+  #Required
+  default_backend_set_name = oci_load_balancer_backend_set.coa_backend_set.name
+  load_balancer_id         = oci_load_balancer_load_balancer.coa_load_balancer.id
+  name                     = "${var.names_prefix}listener-${each.key}"
+  port                     = each.key
+  protocol                 = "HTTP"
+
+  dynamic "ssl_configuration" {
+    for_each = each.value == "443" ? toset(["443"]) : toset([])
+    content {
+      #Optional
+      certificate_name        = oci_load_balancer_certificate.coa_lbaas_certificate[ssl_configuration.value].certificate_name
+      verify_peer_certificate = false
+    }
+  }
+}
+...
+```
+* debugging 
+
+```
+export OCI_GO_SDK_DEBUG=v
+export TF_LOG=TRACE
+export TF_LOG_PATH=./test1.log
+```
+
 
 ## Core Principle - Usability First
-Quick Start deployments are intended to give OCI users a quick start running some piece of software.  As a result we prioritize usability above all else.  A user who knows little to nothing about OCI should be able to stumble in, hit deploy and get a running thing in 5-10 minutes.  Some might argue the system isn't production grade.  That's ok.  It can be improved.  Additional Terraform for more complex systems can be provided.  But, the base version needs to be braindead simple.
+Teraform COA deployments are intended to give OCI users a quick start running some piece of software.  As a result we prioritize usability above all else.  A user who knows little to nothing about OCI should be able to stumble in, hit deploy and get a running thing in 5-10 minutes.  Some might argue the system isn't production grade.  That's ok.  It can be improved.  Additional Terraform for more complex systems can be provided.  But, the base version needs to be braindead simple.
 
 ## Packages exist for a reason.  Use them.
 Yes, there may be a tgz or zip.  Don't use it!  Use the package.  Somebody who knows about the application at hand built a package.  It includes lots of logic you don't want to rewrite.  Follow the three virtues and be lazy!

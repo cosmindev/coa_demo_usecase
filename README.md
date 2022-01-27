@@ -1,8 +1,25 @@
-# oci-quickstart
-The [Oracle Cloud Infrastructure (OCI) Quick Start](https://github.com/oracle-quickstart) is a collection of examples that allow OCI users to get a quick start deploying advanced infrastructure on OCI.
+# COA DevOps Training UseCase
+This projects provides the documentation and the automation(code) for the Oracle EMEA WLA COA Demo UseCase.
 
-## Have an example you want to contribute?
-If you are either an Oracle employee or a partner and have something you think might be a good fit for the Quick Start, please reach out to Collin Poczatek (joseph.poczatek@oracle.com).  Resources for partners interested in building Quick Starts include:
+## Demo environment arhitecture diagram
+
+![Arhitecture diagram](./Diagrams/COA-Demo-Diagram.drawio.png)
+
+## Demo Usecase scenario
+
+TBA
+
+## Demo automation supported operations
+
+* Infrastructure provisioning
+* Configuration management
+* Include configuration into the terraform dependency graph(install/uninstall) - TBA
+* Change management system - ex. open port
+* SSH public key rotation 
+* LBaaS Certificate rotation
+* Cluster Scale Up/Down
+
+## Terraform project design and best pratices
+This automation example is meant to also cover a set of terraform coding example and best practices and provide some stardardisation of how a terraform project should be structured.
 * [Best Practices](Best%20Practices.md)
-* [Marketplace and Quick Start](Marketplace%20and%20Quick%20Start.md)
-* [Marketplace Stack Schema](Marketplace%20Stack%20Schema.md)
+
