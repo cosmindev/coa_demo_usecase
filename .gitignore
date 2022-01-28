@@ -18,6 +18,13 @@
 # Icon must end with two \r
 Icon
 
+#Certificates
+*.crt
+*.csr 
+*.key
+*.srl
+**/certs/*
+
 # Thumbnails
 ._*
 
