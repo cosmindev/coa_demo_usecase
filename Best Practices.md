@@ -188,3 +188,22 @@ Documentation of a Quick Start should be standardized and contain the same secti
 * Connections allowed only from the user's CIDR block optional.
 * No HTTP allowed for management consoles, HTTP ports may be open if they redirect to HTTPS.
 * For software that manages the install/config private keys should not be held by OCI. They should be generated on the fly and the public key passed via object storage to instances that need it.
+
+## Inputs/Outputs
+
+### Inputs
+* For core terraform modules the recomandation will be to expose as many configurations as possible, following a good logical structure and leveraging complex objects to mirror that structure.
+* For solutions build on top of core modules se best jugdment to categorize input parameters inot 2 main categories: 
+    * the 1st one that will diferentiate an instance of the solution from the others. These parameters will be yhe only ones exposed in *.tfvars
+    * the 2nd one will contain the "default" parameters that, usualy, will have the same values across multiple solution instantiation. These values will be harcoded in proxy modules that sit in between solution ```main.tf``` and the core terraform modules.
+
+The spliting in these 2 different categories is very "subjective" but doing so we will avoid exposing the users of the automation to a large variety/complexity of input parameters and will guide them to the right/monigful configuration options for the respective solution.
+
+
+### Ouputs 
+* For ouputs we have 2 different recomandations:
+    * for core terraform modules the ouputs should return all the details of the provisioned resources as the aim for the core modules is reusability in any type of solutions.
+    * for solutions uild on top of terraform core modules we should filter and expose exacly the parameters that are of interest for the respectiv provisioned solution.
+
+The output structure should follow a certain determined logic and should be exposed using terraform complex objects that map that logic. The output format that is using complex object can potentialy be easy to consume/parse by external tools like python scripts.
+
