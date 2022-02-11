@@ -5,7 +5,7 @@
 *.tfstate
 *.tfstate.*
 *.zip*
-*.tfvars
+terraform.tfvars
 
 # Local .terraform lock files
 *.lock.*
