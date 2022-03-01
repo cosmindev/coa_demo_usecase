@@ -71,7 +71,7 @@ install_product = "Nginx"
 #############################
 
 # The COA LBaaS Shape
-load_balancer_shape = "10Mbps-Micro"
+load_balancer_shape = "100Mbps"
 
 # LBaaS listening ports
 # Accepted values: ["80", "443", "<port number>"] 
