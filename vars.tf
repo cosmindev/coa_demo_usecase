@@ -86,10 +86,17 @@ variable "private_subnet_cidr" {
   description = "private subnet CIDR"
 }
 
+# db private subnet CIDR
+variable "db_private_subnet_cidr" {
+  type        = string
+  default     = "10.0.10.0/24"
+  description = "private subnet CIDR"
+}
+
 # public subnet CIDR
 variable "public_subnet_cidr" {
   type        = string
-  default     = "10.0.10.0/24"
+  default     = "10.0.20.0/24"
   description = "public subnet CIDR"
 }
 

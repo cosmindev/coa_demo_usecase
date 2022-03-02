@@ -234,6 +234,40 @@ resource "oci_core_security_list" "coa_private_subnet_security_list" {
   }
 }
 
+resource "oci_core_security_list" "coa_private_db_subnet_security_list" {
+  #Required
+  compartment_id = var.network_compartment_id != null ? var.network_compartment_id : var.default_compartment_id
+  vcn_id         = oci_core_vcn.coa_demo_vcn.id
+
+  #Optional
+  display_name = "${var.names_prefix}private-db-subnet-security-list"
+  defined_tags = {
+    "CCA_Basic_Tag.email" = data.oci_identity_user.coa_demo_executer.name
+  }
+  freeform_tags = var.freeform_tags
+
+  # Egress Rules
+  #egress_security_rules = {}
+
+  # Ingress Rules
+  ingress_security_rules {
+    #Required
+    protocol = local.tcp_protocol
+    source   = var.vcn_cidr
+
+    #Optional
+    description = "Allow ingress for HTTP:80 from ${var.vcn_cidr}"
+    source_type = "CIDR_BLOCK"
+    stateless   = false
+    tcp_options {
+      max = 1521
+      min = 1521
+      #Optional
+      #source_port_range = 
+    }
+  }
+}
+
 resource "oci_core_subnet" "coa_private_subnet" {
   #Required
   cidr_block     = var.private_subnet_cidr
@@ -249,6 +283,23 @@ resource "oci_core_subnet" "coa_private_subnet" {
   freeform_tags     = var.freeform_tags
   route_table_id    = oci_core_route_table.coa_nat_gw_route_table.id
   security_list_ids = [oci_core_security_list.coa_vcn_security_list.id, oci_core_security_list.coa_private_subnet_security_list.id]
+}
+
+resource "oci_core_subnet" "coa_db_private_subnet" {
+  #Required
+  cidr_block     = var.db_private_subnet_cidr
+  compartment_id = var.network_compartment_id != null ? var.network_compartment_id : var.default_compartment_id
+  vcn_id         = oci_core_vcn.coa_demo_vcn.id
+
+  #Optional
+  defined_tags = {
+    "CCA_Basic_Tag.email" = data.oci_identity_user.coa_demo_executer.name
+  }
+  display_name      = "${var.names_prefix}db-private-subnet"
+  dns_label         = "prvdbsubnet"
+  freeform_tags     = var.freeform_tags
+  route_table_id    = oci_core_route_table.coa_nat_gw_route_table.id
+  security_list_ids = [oci_core_security_list.coa_vcn_security_list.id, oci_core_security_list.coa_private_db_subnet_security_list.id]
 }
 
 resource "oci_core_subnet" "coa_public_subnet" {

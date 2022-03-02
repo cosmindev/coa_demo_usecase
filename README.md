@@ -9,7 +9,7 @@ We're going to showcase, by following a realistic usecase, the following:
 
 ## Demo environment arhitecture diagram
 
-![Arhitecture diagram](./Diagrams/COA-Demo-Diagram.drawio.png)
+![Arhitecture diagram](./Diagrams/COA-Demo-Diagram.png)
 
 ## Demo Usecase scenario
 
@@ -50,4 +50,8 @@ On this topology we'll be able to demostrate the operations described bellow.
 ## Terraform project design and best practices
 This automation example is meant to also cover a set of terraform coding example and best practices and provide some stardardisation of how a terraform project should be structured.
 * [Best Practices](Best%20Practices.md)
+
+## Notes
+
+* OCI LBaaS SSL Certificates documentation - [Oracle Cloud Infrastructure - How Create a SSL Certificate for a Load Balancer (Doc ID 2617046.1)](https://support.oracle.com/epmos/faces/DocumentDisplay?_afrLoop=277516062308946&parent=EXTERNAL_SEARCH&sourceId=HOWTO&id=2617046.1&_afrWindowMode=0&_adf.ctrl-state=5h8shvw9b_4)
 

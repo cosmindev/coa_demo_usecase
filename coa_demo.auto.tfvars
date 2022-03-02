@@ -34,9 +34,12 @@ vcn_cidr = "10.0.0.0/16"
 # private subnet CIDR
 private_subnet_cidr = "10.0.0.0/24"
 
+# private DB subnet CIDR
+db_private_subnet_cidr = "10.0.10.0/24"
+
 
 # public subnet CIDR
-public_subnet_cidr = "10.0.10.0/24"
+public_subnet_cidr = "10.0.20.0/24"
 
 #############################
 # OCI COA WEB Instances

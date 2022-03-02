@@ -32,6 +32,13 @@ locals {
       dns_label      = "${oci_core_vcn.coa_demo_vcn.dns_label}.${oci_core_subnet.coa_private_subnet.dns_label}",
       security_lists = [oci_core_security_list.coa_vcn_security_list.display_name, oci_core_security_list.coa_private_subnet_security_list.display_name]
     },
+    private-db-subnet = {
+      subnet_name    = oci_core_subnet.coa_db_private_subnet.display_name,
+      subnet_cidr    = oci_core_subnet.coa_db_private_subnet.cidr_block,
+      route_table    = oci_core_route_table.coa_nat_gw_route_table.display_name,
+      dns_label      = "${oci_core_vcn.coa_demo_vcn.dns_label}.${oci_core_subnet.coa_db_private_subnet.dns_label}",
+      security_lists = [oci_core_security_list.coa_vcn_security_list.display_name, oci_core_security_list.coa_private_db_subnet_security_list.display_name]
+    },
     public-subnet = {
       subnet_name    = oci_core_subnet.coa_public_subnet.display_name,
       subnet_cidr    = oci_core_subnet.coa_public_subnet.cidr_block,
