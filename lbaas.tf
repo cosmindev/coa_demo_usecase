@@ -2,9 +2,9 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 locals {
-    #converting list to set as for_each doeas not support lists, just sets
-    ssl_port_set = toset(matchkeys(var.lbaas_listening_ports, var.lbaas_listening_ports, ["443"]))
-    ports_set = toset(var.lbaas_listening_ports)
+  #converting list to set as for_each doeas not support lists, just sets
+  ssl_port_set = toset(matchkeys(var.lbaas_listening_ports, var.lbaas_listening_ports, ["443"]))
+  ports_set    = toset(var.lbaas_listening_ports)
 }
 
 resource "oci_load_balancer_load_balancer" "coa_load_balancer" {

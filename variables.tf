@@ -31,6 +31,10 @@ variable "private_key_path" {
 variable "region" {
   default     = "eu-frankfurt-1"
   description = "region (us-phoenix-1, ca-toronto-1, etc)"
+  validation {
+    condition     = contains(["eu-frankfurt-1", "eu-amsterdam-1", "uk-london-1"], var.region)
+    error_message = "The available regions are [\"eu-frankfurt-1\", \"eu-amsterdam-1\", \"uk-london-1\"]."
+  }
 }
 
 # default compartment 
