@@ -78,7 +78,7 @@ load_balancer_shape = "100Mbps"
 
 # LBaaS listening ports
 # Accepted values: ["80", "443", "<port number>"]
-lbaas_listening_ports = ["80", "443"]
+lbaas_listening_ports = ["443"]
 
 # The path to the load balancer route key CA certificate(CA)
 # Only used if port SSL:443 is enabled
