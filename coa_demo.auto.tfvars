@@ -77,7 +77,7 @@ install_product = "Nginx"
 load_balancer_shape = "100Mbps"
 
 # LBaaS listening ports
-# Accepted values: ["80", "443", "<port number>"] close
+# Accepted values: ["80", "443", "<port number>"]
 lbaas_listening_ports = ["80", "443"]
 
 # The path to the load balancer route key CA certificate(CA)
